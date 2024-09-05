@@ -51,12 +51,12 @@ QQ机器人通过开放平台支持定制化功能，方便开发者。来看这
 
 从GitHub克隆项目：
 ```bash
-git clone https://github.com/liyihao1110/qq_bot_cmd.git
+git clone https://github.com/liyihao1110/QQbot_LG.git
 ```
 
 或者从Gitee克隆项目：
 ```bash
-git clone https://gitee.com/li-yihao0328/qq_bot_cmd.git
+git clone https://gitee.com/li-yihao0328/QQbot_LG.git
 ```
 
 跳转到项目目录，安装依赖：
