@@ -1,0 +1,5 @@
+openai==1.43.0
+websocket-client==1.8.0
+qq-botpy==1.2.1
+requests==2.32.3
+

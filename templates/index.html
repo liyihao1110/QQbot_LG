@@ -1,0 +1,773 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QQ机器人控制台</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f0f4f8, #e0eaf1);
+            color: #333;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .container {
+            background-color: #f0f0f0; /* 修改为浅灰色 */
+            padding: 30px;
+            border-radius: 16px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+            width: 95%;
+            max-width: 1300px;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header {
+            text-align: center;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #ddd;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        h1 {
+            color: #222;
+            font-size: 36px;
+            margin: 0;
+            font-weight: bold;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+            display: inline-block;
+        }
+
+        .main-content {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .left-column {
+            width: 20%;
+            padding-right: 20px;
+        }
+
+        .center-column {
+            width: 60%;
+        }
+
+        .config-section {
+            width: 20%;
+            padding-left: 20px;
+        }
+
+        .module {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            color: #555;
+            transition: transform 0.3s ease, box-shadow 0.3s ease; /* 添加灵动效果 */
+        }
+
+        .module:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .module-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .module1 {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            color: #555;
+        }
+
+        .module1:hover {
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .module1-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 10px;
+        }
+        .link-section a {
+            display: block;
+            margin-bottom: 8px;
+            color: #0056b3;
+            text-decoration: none;
+            transition: color 0.3s, text-shadow 0.3s;
+            font-weight: bold;
+            padding: 10px;
+            border-radius: 5px;
+            background: linear-gradient(135deg, #f3e7e9, #e3eeff);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            position: relative;
+        }
+
+        .link-section a::before {
+            content: '🔗';
+            margin-right: 5px;
+        }
+
+        .link-section a:hover {
+            color: #004494;
+            text-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+            background: linear-gradient(135deg, #e3eeff, #f3e7e9);
+        }
+
+        .cmd-output {
+            background-color: #282c34;
+            color: #00ff00;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 14px;
+            height: 400px; /* 增大高度 */
+            overflow-y: scroll;
+            padding: 10px; /* 美化命令行输出字体 */
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .cmd-output p {
+            margin: 0;
+            padding: 0;
+        }
+
+        .author-blog {
+            position: absolute;
+            top: 45px;
+            right: 35px;
+            font-size: 14px;
+
+            color: #333;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+
+        }
+
+        .author-blog a {
+            color: #007BFF;
+            text-decoration: none;
+            font-size: 14px;
+            transition: color 0.3s, text-shadow 0.3s;
+            font-weight: bold;
+            padding: 15px 20px;
+            border-radius: 10px;
+            background: linear-gradient(135deg, #f3e7e9, #e3eeff);
+            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .author-blog a::before {
+            content: '🔗';
+            margin-right: 5px;
+        }
+
+        .author-blog a:hover {
+            color: #0056b3;
+            text-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+            background: linear-gradient(135deg, #e3eeff, #f3e7e9);
+        }
+
+        .button {
+            display: inline-block;
+            padding: 8px 15px; /* 按钮变小 */
+            margin-top: 10px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background-color 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+            transition: left 0.5s;
+        }
+
+        .button:hover::before {
+            left: 100%;
+        }
+
+        .start-button {
+            background-image: linear-gradient(to right, #66bb6a, #43a047);
+            color: #fff;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .login-button {
+            background-image: linear-gradient(to right, #6a11cb, #2575fc);
+            color: #fff;
+        }
+
+        .close-button {
+            background-image: linear-gradient(to right, #ff416c, #ff4b2b);
+            color: #fff;
+        }
+
+        .button:hover {
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+            transform: translateY(-3px);
+        }
+
+        .ip-display {
+            font-family: 'Arial', sans-serif; /* 更具美感的字体 */
+            font-size: 1.2em; /* 增大字体大小 */
+            line-height: 1.2; /* 增加行高 */
+            color: #333; /* 调整文字颜色，使其与背景形成更好对比 */
+            background-color: #f5f5f5; /* 浅灰色背景 */
+            padding: 15px;
+            border-radius: 10px;
+            text-align: left;
+            margin: 10px 0;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 70%;
+            margin-left: 0;
+            position: relative;
+            overflow: hidden;
+            backdrop-filter: blur(5px); /* 毛玻璃效果 */
+            font-weight: 500; /* 调整字体粗细 */
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1); /* 添加文字阴影 */
+            cursor: pointer;
+        }
+
+
+
+
+        #login-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        #login-modal div {
+            background: linear-gradient(135deg, #f3e7e9, #e3eeff);
+            padding: 15px; /* 减小内边距 */
+            border-radius: 12px;
+            width: 300px; /* 减小宽度 */
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            position: relative;
+        }
+
+        #login-modal h2 {
+            margin-bottom: 15px; /* 减小底部外边距 */
+        }
+
+        #login-modal input {
+            width: calc(100% - 20px);
+            padding: 8px; /* 减小内边距 */
+            margin-bottom: 10px; /* 减小底部外边距 */
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #ffffff;
+            box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1);
+            color: #333;
+            transition: box-shadow 0.3s ease, border-color 0.3s ease;
+        }
+
+        #login-modal input:focus {
+            box-shadow: 0 0 8px rgba(58, 133, 255, 0.5);
+            border-color: #6a11cb;
+        }
+
+        #kimi-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        #kimi-modal div {
+            background: linear-gradient(135deg, #f3e7e9, #e3eeff);
+            padding: 15px; /* 减小内边距 */
+            border-radius: 12px;
+            width: 300px; /* 减小宽度 */
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            position: relative;
+        }
+
+        #kimi-modal h2 {
+            margin-bottom: 15px; /* 减小底部外边距 */
+        }
+
+        #kimi-modal input {
+            width: calc(100% - 20px);
+            padding: 8px; /* 减小内边距 */
+            margin-bottom: 10px; /* 减小底部外边距 */
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #ffffff;
+            box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1);
+            color: #333;
+            transition: box-shadow 0.3s ease, border-color 0.3s ease;
+        }
+
+        #kimi-modal input:focus {
+            box-shadow: 0 0 8px rgba(58, 133, 255, 0.5);
+            border-color: #6a11cb;
+        }
+
+        #ai360-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        #ai360-modal div {
+            background: linear-gradient(135deg, #f3e7e9, #e3eeff);
+            padding: 15px; /* 减小内边距 */
+            border-radius: 12px;
+            width: 300px; /* 减小宽度 */
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            position: relative;
+        }
+
+        #ai360-modal h2 {
+            margin-bottom: 15px; /* 减小底部外边距 */
+        }
+
+        #ai360-modal input {
+            width: calc(100% - 20px);
+            padding: 8px; /* 减小内边距 */
+            margin-bottom: 10px; /* 减小底部外边距 */
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #ffffff;
+            box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1);
+            color: #333;
+            transition: box-shadow 0.3s ease, border-color 0.3s ease;
+        }
+
+        #ai360-modal input:focus {
+            box-shadow: 0 0 8px rgba(58, 133, 255, 0.5);
+            border-color: #6a11cb;
+        }
+
+        .date-time {
+            position: absolute;
+            top: 25px;
+            left: 25px;
+            font-size: 18px;
+            color: #555;
+            background: linear-gradient(135deg, #f3e7e9, #e3eeff);
+            padding: 15px 10px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        .qq-button {
+            background-image: linear-gradient(to right, #6a11cb, #2575fc);
+            color: #fff;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            margin-top: 10px;
+        }
+        
+        #qq-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        #qq-modal div {
+            background: linear-gradient(135deg, #f3e7e9, #e3eeff);
+            padding: 15px; /* 减小内边距 */
+            border-radius: 12px;
+            width: 300px; /* 减小宽度 */
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            position: relative;
+        }
+
+        #qq-modal h2 {
+            margin-bottom: 15px; /* 减小底部外边距 */
+        }
+
+        #qq-modal input {
+            width: calc(100% - 20px);
+            padding: 8px; /* 减小内边距 */
+            margin-bottom: 10px; /* 减小底部外边距 */
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #ffffff;
+            box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1);
+            color: #333;
+            transition: box-shadow 0.3s ease, border-color 0.3s ease;
+        }
+
+        #qq-modal input:focus {
+            box-shadow: 0 0 8px rgba(58, 133, 255, 0.5);
+            border-color: #6a11cb;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- 讯飞模型配置模态框 -->
+    <div id="login-modal">
+        <div>
+            <h2 style="text-align:center">讯飞模型配置</h2>
+            <form id="login-form">
+                <label for="appid">App ID:</label>
+                <input type="text" id="appid" name="appid" required>
+                <label for="appsercet">App Secret:</label>
+                <input type="text" id="appsercet" name="appsercet" required>
+                <label for="appkey">App Key:</label>
+                <input type="text" id="appkey" name="appkey" required><br><br>
+                <button type="submit" class="button login-button">登录</button>
+                <button type="button" class="button close-button" onclick="closeModal()">关闭</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Kimi模型配置模态框 -->
+    <div id="kimi-modal" style="display:none;">
+        <div>
+            <h2 style="text-align:center">Kimi模型配置</h2>
+            <form id="kimi-form">
+                <label for="kimi-appid">Kimi Key:</label>
+                <input type="text" id="kimi-appid" name="appid" required><br><br>
+
+                <button type="submit" class="button login-button">登录</button>
+                <button type="button" class="button close-button" onclick="closeKimiModal()">关闭</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- 360模型配置模态框 -->
+    <div id="ai360-modal" style="display:none;">
+        <div>
+            <h2 style="text-align:center">360模型配置</h2>
+            <form id="ai360-form">
+                <label for="ai360-appid">360AI Key:</label>
+                <input type="text" id="ai360-appid" name="appid" required><br><br>
+
+                <button type="submit" class="button login-button">登录</button>
+                <button type="button" class="button close-button" onclick="closeAI360Modal()">关闭</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- QQ机器人登入模态框 -->
+
+    <div id="qq-modal" style="display:none;">
+        <div>
+            <h2 style="text-align:center">QQ机器人登入</h2>
+            <form id="qq-form">
+                <label for="qq-account">QQ账号:</label>
+                <input type="text" id="qq-account" name="account" required>
+                <label for="qq-password">QQ密码:</label>
+                <input type="password" id="qq-password" name="password" required><br><br>
+                <button type="submit" class="button login-button">登录</button>
+                <button type="button" class="button close-button" onclick="closeQQModal()">关闭</button>
+            </form>
+        </div>
+    </div>
+
+    
+    <div class="container">
+        <div class="header">
+            <h1>🤖QQ机器人控制台</h1>
+        </div>
+        <div class="date-time" id="date-time"></div>
+        <div class="main-content">
+            <div class="left-column">
+                <div class="module">
+                    <div class="module-title">模型调用</div>
+                    <div class="link-section">
+                        <a href="https://xinghuo.xfyun.cn/sparkapi" target="_blank">前往获取讯飞模型API</a>
+                        <a href="https://platform.moonshot.cn/docs/intro#%E8%8E%B7%E5%8F%96-api-%E5%AF%86%E9%92%A5" target="_blank">前往获取kimi模型API</a>
+                        <a href="https://i.360.cn/login?src=pcw_chat&destUrl=https%3A%2F%2Fai.360.cn%2Fplatform.html" target="_blank">前往获取360模型API</a>
+                    </div>
+                </div>
+                <div class="module">
+                    <div class="module-title">QQ机器人配置</div>
+                    <div class="link-section">
+                        <a href="https://q.qq.com/#/" target="_blank">QQ机器人官网</a>
+                        <button id="qq-button" class="button qq-button" style="width: 100%;">登录QQ机器人</button>
+                    </div>
+                </div>
+                <div class="module">
+                    <div class="module-title">🛜公网IP（左击可复制）</div>
+                    <div class="ip-display" id="ip-display" onclick="copyIP()">正在获取公网IP...</div>
+
+                </div>
+
+            </div>
+
+            <div class="center-column">
+
+
+                <div class="module1">
+                    <div class="module1-title">💡监听界面</div>
+                    <div class="cmd-output" id="cmd-output">
+                        <p>> hello QQbot！</p>
+                    </div>
+                </div>
+
+                <div class="author-blog">
+                    <a href="https://blog.csdn.net/qq_71745595?type=blog" target="_blank">作者博客：吃点李子</a>
+                    <a href="https://in.fastconnectcloud1.com/#/register?code=zqyq4Ah9" target="_blank">推荐小飞机✈️</a> <!-- 添加引用 -->
+                </div>
+            </div>
+
+            <div class="config-section">
+                <div class="module">
+                    <div class="module-title">配置界面</div>
+                    <div class="link-section">
+                        <button id="login-button" class="button login-button" style="width: 100%;">讯飞模型配置</button>
+                        <button id="kimi-button" class="button login-button" style="width: 100%;">Kimi模型配置</button> <!-- 新增按钮 -->
+                        <button id="ai360-button" class="button login-button" style="width: 100%;">360模型配置</button> <!-- 新增按钮 -->
+                        <button id="start-button" class="button start-button" style="width: 100%;">启动QQ机器人</button>
+                        
+                    </div>
+                </div>
+                <div class="module">
+                    <div class="module-title">帮助😊</div>
+                    <p>默认启动频道对话，开启群对话需要在频道中向机器人发送指令start，如要暂停群对话监听，则需要发送指令stop。切换模型使用频道内指令:/kimi，/xunfei，/ai360。</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        async function getPublicIP() {
+            try {
+                const response = await fetch('https://api.ipify.org?format=json');
+                const data = await response.json();
+                document.getElementById('ip-display').textContent = `${data.ip}`;
+            } catch (error) {
+                console.error('获取公网IP失败:', error);
+                document.getElementById('ip-display').textContent = '无法获取公网IP';
+            }
+        }
+
+        const eventSource = new EventSource('/logs');
+        eventSource.onmessage = function (event) {
+            const outputDiv = document.getElementById('cmd-output');
+            const newMessage = document.createElement('p');
+            newMessage.textContent = event.data;
+            outputDiv.appendChild(newMessage);
+            outputDiv.scrollTop = outputDiv.scrollHeight;
+        };
+
+        // 讯飞模型配置逻辑
+        function closeModal() {
+            document.getElementById('login-modal').style.display = 'none';
+        }
+
+        function showModal() {
+            document.getElementById('login-modal').style.display = 'flex';
+        }
+
+        function login() {
+            const appid = document.getElementById('appid').value;
+            const appsercet = document.getElementById('appsercet').value;
+            const appkey = document.getElementById('appkey').value;
+            const xhr = new XMLHttpRequest();
+            xhr.open('POST', '/login');
+            xhr.setRequestHeader('Content-Type', 'application/json');
+            xhr.send(JSON.stringify({ appid, appsercet, appkey }));
+            xhr.onload = function () {
+                if (xhr.status === 200) {
+                    alert('配置成功');
+                    closeModal();
+                } else {
+                    alert('配置失败，请检查输入是否正确');
+                }
+            };
+        }
+
+        // Kimi模型配置逻辑
+        function closeKimiModal() {
+            document.getElementById('kimi-modal').style.display = 'none';
+        }
+
+        function showKimiModal() {
+            document.getElementById('kimi-modal').style.display = 'flex';
+        }
+
+        function kimiLogin() {
+            const appid = document.getElementById('kimi-appid').value;
+            const xhr = new XMLHttpRequest();
+            xhr.open('POST', '/kimi-login'); // 修改为Kimi模型的请求地址
+            xhr.setRequestHeader('Content-Type', 'application/json');
+            xhr.send(JSON.stringify({ appid }));
+            xhr.onload = function () {
+                if (xhr.status === 200) {
+                    alert('Kimi配置成功');
+                    closeKimiModal();
+                } else {
+                    alert('Kimi配置失败，请检查输入是否正确');
+                }
+            };
+        }
+
+        // 360模型配置逻辑
+        function closeAI360Modal() {
+            document.getElementById('ai360-modal').style.display = 'none';
+        }
+
+        function showAI360Modal() {
+            document.getElementById('ai360-modal').style.display = 'flex';
+        }
+
+        function ai360Login() {
+            const appid = document.getElementById('ai360-appid').value;
+            const xhr = new XMLHttpRequest();
+            xhr.open('POST', '/ai360-login'); // 修改为360模型的请求地址
+            xhr.setRequestHeader('Content-Type', 'application/json');
+            xhr.send(JSON.stringify({ appid }));
+            xhr.onload = function () {
+                if (xhr.status === 200) {
+                    alert('360配置成功');
+                    closeAI360Modal();
+                } else {
+                    alert('360配置失败，请检查输入是否正确');
+                }
+            };
+        }
+
+        // QQ机器人登入逻辑
+        function closeQQModal() {
+            document.getElementById('qq-modal').style.display = 'none';
+        }
+
+        function showQQModal() {
+            document.getElementById('qq-modal').style.display = 'flex';
+        }
+
+        function qqLogin() {
+            const account = document.getElementById('qq-account').value;
+            const password = document.getElementById('qq-password').value;
+            const xhr = new XMLHttpRequest();
+            xhr.open('POST', '/qq-login');
+            xhr.setRequestHeader('Content-Type', 'application/json');
+            xhr.send(JSON.stringify({ account, password }));
+            xhr.onload = function () {
+                if (xhr.status === 200) {
+                    alert('QQ机器人登入成功');
+                    closeQQModal();
+                } else {
+                    alert('QQ机器人登入失败，请检查输入是否正确');
+                }
+            };
+        }
+
+        document.getElementById('qq-button').addEventListener('click', showQQModal);
+        document.getElementById('qq-form').addEventListener('submit', function (event) {
+            event.preventDefault();
+            qqLogin();
+        });
+        // 启动机器人
+        function start() {
+            const xhr = new XMLHttpRequest();
+            xhr.open('POST', '/start');
+            xhr.send();
+            xhr.onload = function () {
+                if (xhr.status === 200) {
+                    alert('启动成功');
+                } else {
+                    alert('启动失败，请检查配置是否正确');
+                }
+            };
+        }
+
+        function copyIP() {
+            const ipDisplay = document.getElementById('ip-display');
+            const tempInput = document.createElement('input');
+            tempInput.value = ipDisplay.textContent;
+            document.body.appendChild(tempInput);
+            tempInput.select();
+            document.execCommand('copy');
+            document.body.removeChild(tempInput);
+            alert('IP地址已复制到剪贴板：' + ipDisplay.textContent);
+        }
+
+        <!-- 显示时间功能 -->
+
+        function showTime() {
+            const date = new Date();
+            const timeStr = `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()} ${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`;
+            document.getElementById('date-time').textContent = `⏰当前时间: ${timeStr}`;
+        }
+
+        setInterval(showTime, 1000);
+
+        document.getElementById('login-button').addEventListener('click', showModal);
+        document.getElementById('login-form').addEventListener('submit', function (event) {
+            event.preventDefault();
+            login();
+        });
+        document.getElementById('kimi-button').addEventListener('click', showKimiModal); // 绑定Kimi按钮事件
+        document.getElementById('kimi-form').addEventListener('submit', function (event) {
+            event.preventDefault();
+            kimiLogin();
+        });
+        document.getElementById('ai360-button').addEventListener('click', showAI360Modal); // 绑定360按钮事件
+        document.getElementById('ai360-form').addEventListener('submit', function (event) {
+            event.preventDefault();
+            ai360Login();
+        });
+        document.getElementById('start-button').addEventListener('click', start);
+        getPublicIP();
+        setInterval(getPublicIP, 10000);
+    </script>
+</body>
+
+</html>
